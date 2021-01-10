@@ -1,13 +1,15 @@
-// I believe this is the right way to do it.
-function getPlots(id) {
+// Create function to build the barchart and the bubble chart.
+function buildPlots(id) {
   d3.json('samples.json').then(function(data) {
     // console.log(data);
 
+    // Filter Data to contain desired info based on selected id 
     var sample_data = data.samples;
     console.log(sample_data);
     var result1 = sample_data.filter(sample => sample.id.toString() === id)[0];
     console.log(result1);
 
+    // Create variables and retrieve the data for the desired data points to build the charts
     var ids = result1.otu_ids;
     console.log(ids);
     var values = result1.sample_values;
@@ -24,7 +26,9 @@ function getPlots(id) {
     // Reformat the ids
     var otuID = top_ids.map(d => 'OTU' + d);
     // console.log(otuID);
-    // Create traces for ids
+
+
+    // Create traces for the id'd data
     var trace = {
       x: topValues,
       y: otuID,
@@ -35,16 +39,13 @@ function getPlots(id) {
     };
     var data = [trace];
 
+    // Create the chart layout
     var layout = {
       title: 'Top 10 OTU',
-      yaxis:{tickmode:'linear'},
-      margin: {
-        l: 100,
-        r: 100,
-        t: 100,
-        b: 30
-    }
+      yaxis:{tickmode:'linear'}
     };
+    
+    // Plot the bar chart with the acquired data
     Plotly.newPlot('bar',data,layout);
 
     // Create the bubble chart
@@ -71,16 +72,8 @@ function getPlots(id) {
   })
 };
 
-getPlots();
+buildPlots();
 
-// function getPlots(id) {
-//   var dropdownMenu = d3.select('#selDataset');
-//   var dataset = dropdownMenu.node().value;
-//   var chart = d3.selectAll('.col-md-5').node();
-//   d3.json('samples.json').then(function(data) {
-//     var
-//   })
-// }
 
 // Function to retrieve data for demographics info 
 function getData(id) {
@@ -96,8 +89,10 @@ function getData(id) {
     // Select the demographic area to add in metadata
     var demographic = d3.select('#sample-metadata');
 
+    // Clear the selection data so it doesn't aggregate on itself
     demographic.html("");
 
+    // Append the text box with all the demographic information 
     Object.entries(result).forEach(key => {
       demographic.append('h5').text(key[0].toUpperCase() + ': ' + key[1] + "\n");
     });
@@ -106,41 +101,9 @@ function getData(id) {
 
 getData();
 
-// function getData(id) {
-//   d3.event.preventDefault();
-
-//   d3.json('samples.json').then(function(data) {
-//     var metadata = data.metadata;
-
-//     var demographic = d3.select('.panel-body');
-
-//     var filteredData = metadata.filter(meta => meta.id === )
-//   })
-// }
-
-
-// Read json file into js file and console log it
-// d3.json('samples.json').then(function(data) {
-//     console.log(data);
-//     var names = data.names;
-//     var values = data.samples.sample_values;
-//     console.log(values);
-//     console.log(names);
-//     // Add options to the dropdown
-//     d3.select('#selDataset')
-//       .selectAll('myOptions')
-//         .data(names)
-//       .enter()
-//         .append('option')
-//       .text(function(d) {
-//         return d;
-//       })
-//       .attr('value', function(d) { return d});
-// });
-
 // Option Changed function 
 function optionChanged(id) {
-  getPlots(id);
+  buildPlots(id);
   getData(id);
 }
 
@@ -149,40 +112,15 @@ function init() {
   d3.json('samples.json').then((data)=> {
     // console.log(data)
 
+    // Append the 'options' part of the dropdown menu already created in index.html 
     data.names.forEach(function(name) {
       dropdown.append('option').text(name).property('value');
     });
-    getPlots(data.names[0]);
+
+    // Call the data and plots functions to contain the first id and it's info 
+    buildPlots(data.names[0]);
     getData(data.names[0]);
   });
 }
 
 init();
-
-// var data = [
-//   {
-//     x: sample_values,
-//   }
-// ]
-
-// var select = document.getElementById('selDataset');
-// for(index in names) {
-//   select.options[select.options.length] = 
-// }
-
-
-
-// Create an unpack function to get the data we need
-function unpack(rows, index) {
-    return rows.map(function(row) {
-      return row[index];
-    });
-}
-
-
-// Create the build plot function for the otu-data
-// function buildPlot() {
-//     d3.json('samples.json').then(function(data) {
-//         var sample_values = unpack(data.samples)
-//     })
-// }
