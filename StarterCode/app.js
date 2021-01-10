@@ -4,22 +4,22 @@ function getPlots(id) {
     // console.log(data);
 
     var sample_data = data.samples;
-    // console.log(sample_data);
+    console.log(sample_data);
     var result1 = sample_data.filter(sample => sample.id.toString() === id)[0];
     console.log(result1);
 
-    var ids = data.samples[0].otu_ids;
-    // console.log(ids);
-    var values = data.samples[0].sample_values;
+    var ids = result1.otu_ids;
+    console.log(ids);
+    var values = result1.sample_values;
     // console.log(values);
-    var topValues = data.samples[0].sample_values.slice(0,10).reverse();
+    var topValues = result1.sample_values.slice(0,10).reverse();
     // console.log(topValues);
-    var labels = data.samples[0].otu_labels;
+    var labels = result1.otu_labels;
     // console.log(labels);
-    var topLabels = data.samples[0].otu_labels.slice(0,10);
+    var topLabels = result1.otu_labels.slice(0,10);
     // console.log(topLabels);
     // Top ten bacteria ids
-    var top_ids = (data.samples[0].otu_ids.slice(0,10)).reverse();
+    var top_ids = (result1.otu_ids.slice(0,10)).reverse();
     // console.log(top_ids);
     // Reformat the ids
     var otuID = top_ids.map(d => 'OTU' + d);
