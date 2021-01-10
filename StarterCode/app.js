@@ -1,23 +1,29 @@
 // I believe this is the right way to do it.
 function getPlots(id) {
   d3.json('samples.json').then(function(data) {
-    console.log(data);
+    // console.log(data);
+
+    var sample_data = data.samples;
+    // console.log(sample_data);
+    var result1 = sample_data.filter(sample => sample.id.toString() === id)[0];
+    console.log(result1);
+
     var ids = data.samples[0].otu_ids;
-    console.log(ids);
+    // console.log(ids);
     var values = data.samples[0].sample_values;
-    console.log(values);
+    // console.log(values);
     var topValues = data.samples[0].sample_values.slice(0,10).reverse();
-    console.log(topValues);
+    // console.log(topValues);
     var labels = data.samples[0].otu_labels;
-    console.log(labels);
+    // console.log(labels);
     var topLabels = data.samples[0].otu_labels.slice(0,10);
-    console.log(topLabels);
+    // console.log(topLabels);
     // Top ten bacteria ids
     var top_ids = (data.samples[0].otu_ids.slice(0,10)).reverse();
-    console.log(top_ids);
+    // console.log(top_ids);
     // Reformat the ids
     var otuID = top_ids.map(d => 'OTU' + d);
-    console.log(otuID);
+    // console.log(otuID);
     // Create traces for ids
     var trace = {
       x: topValues,
@@ -57,12 +63,8 @@ function getPlots(id) {
 
     var layout1 = {
       title: 'OTU Data',
-      margin: {
-        l: 100,
-        r: 100,
-        t: 100,
-        b: 30
-      }
+      height: 600,
+      weight: 1000,
     };
     Plotly.newPlot('bubble', data1, layout1);
 
@@ -71,14 +73,24 @@ function getPlots(id) {
 
 getPlots();
 
+// function getPlots(id) {
+//   var dropdownMenu = d3.select('#selDataset');
+//   var dataset = dropdownMenu.node().value;
+//   var chart = d3.selectAll('.col-md-5').node();
+//   d3.json('samples.json').then(function(data) {
+//     var
+//   })
+// }
+
 // Function to retrieve data for demographics info 
 function getData(id) {
   d3.json('samples.json').then(function(data) {
     var metadata = data.metadata;
-    console.log(metadata);
+    // console.log(metadata);
 
     // Filter metadata by id
-    var selection = metadata.filter(meta => meta.id.toString() === id)[0];
+    var result = metadata.filter(meta => meta.id.toString() === id)[0];
+    console.log(result);
     // var id = metadata[0].id;
     // console.log(id);
     // Select the demographic area to add in metadata
@@ -86,8 +98,8 @@ function getData(id) {
 
     demographic.html("");
 
-    Object.entries(selection).forEach(key => {
-      demographic.append('h3').text(key[0].toUpperCase() + ': ' + key[1] + "\n");
+    Object.entries(result).forEach(key => {
+      demographic.append('h5').text(key[0].toUpperCase() + ': ' + key[1] + "\n");
     });
 });
 };
@@ -135,7 +147,7 @@ function optionChanged(id) {
 function init() {
   var dropdown = d3.select('#selDataset');
   d3.json('samples.json').then((data)=> {
-    console.log(data)
+    // console.log(data)
 
     data.names.forEach(function(name) {
       dropdown.append('option').text(name).property('value');
